@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MovieBooking" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <!-- Set the status bar color -->
+        <item name="android:statusBarColor">@color/white</item>
+        <!-- Set the windowLightStatusBar attribute -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.MovieBooking" parent="Base.Theme.MovieBooking" />
+</resources>
