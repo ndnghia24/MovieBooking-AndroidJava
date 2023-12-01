@@ -58,40 +58,19 @@
         </RelativeLayout>
 
         <!-- Search Bar -->
-        <RelativeLayout
+
+        <SearchView
+            android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/search_bar"
-            android:layout_below="@+id/container">
-
-            <EditText
-                android:id="@+id/editTextSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:hint="Search..."
-                android:paddingLeft="45dp"
-                android:paddingRight="12dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:background="@drawable/edit_text_rounded_bg"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"/>
-
-            <ImageView
-                android:id="@+id/imageViewSearch"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:layout_marginStart="10dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"/>
-
-        </RelativeLayout>
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@+id/container"
+            android:iconifiedByDefault="false"
+            android:background="@drawable/searchview_background"
+            android:queryBackground="@android:color/transparent">
+        </SearchView>
 
         <ScrollView
             android:layout_width="match_parent"

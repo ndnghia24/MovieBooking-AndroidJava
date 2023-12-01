@@ -103,12 +103,12 @@ public class MoviePageActivity extends AppCompatActivity {
         TextView movieRating = (TextView) findViewById(R.id.tv_movie_rate);
         TextView movieGenre = (TextView) findViewById(R.id.tv_movie_genre);
 
-        Glide.with(this).load(receivedMovie.getThumbnailUrl()).into(movieImage);
+        Glide.with(this).load(receivedMovie.getThumbnail()).into(movieImage);
         movieTitle.setText(receivedMovie.getTitle());
         movieDescription.setText(receivedMovie.getDescription());
         movieDuration.setText(receivedMovie.getDuration() + " mins");
         movieRating.setText(receivedMovie.getRate());
-        movieGenre.setText(receivedMovie.getGenre());
+        movieGenre.setText(receivedMovie.getMainGenre());
     }
 
     private void bindDataToDateList() {

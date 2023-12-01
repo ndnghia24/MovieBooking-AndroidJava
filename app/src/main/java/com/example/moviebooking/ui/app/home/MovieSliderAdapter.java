@@ -65,7 +65,7 @@ public class MovieSliderAdapter extends RecyclerView.Adapter<MovieSliderAdapter.
             imageView = itemView.findViewById(R.id.imageSlide);
         }
         private void setImage(Movie movie) {
-            Glide.with(mContext).load(movie.getThumbnailUrl()).override(270, 410).into(imageView);
+            Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(imageView);
         }
     }
 
