@@ -43,12 +43,16 @@ public class LoginActivity extends AppCompatActivity {
     private void preLoadData() {
         firebaseManager.fetchNowShowingMoviesData(new FireBaseManager.OnMoviesDataLoadedListener() {
             @Override
-            public void onMoviesDataLoaded(List<Movie> NowShowingMoviesList) {
-            }
-
+            public void onMoviesDataLoaded(List<Movie> NowShowingMoviesList) {}
             @Override
-            public void onMoviesDataError(String errorMessage) {
-            }
+            public void onMoviesDataError(String errorMessage) {}
+        });
+
+        firebaseManager.fetchAllMoviesData(new FireBaseManager.OnMoviesDataLoadedListener() {
+            @Override
+            public void onMoviesDataLoaded(List<Movie> NowShowingMoviesList) {}
+            @Override
+            public void onMoviesDataError(String errorMessage) {}
         });
     }
 

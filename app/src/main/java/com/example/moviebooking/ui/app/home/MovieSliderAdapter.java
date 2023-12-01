@@ -46,6 +46,9 @@ public class MovieSliderAdapter extends RecyclerView.Adapter<MovieSliderAdapter.
         if (position == mListMovie.size() - 2) {
             viewPager2.post(sliderRunnable);
         }
+
+
+
         holder.imageView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), MoviePageActivity.class);
             intent.putExtra("movie", movie);

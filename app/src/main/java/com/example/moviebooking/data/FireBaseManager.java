@@ -19,6 +19,7 @@ public class FireBaseManager {
     private FirebaseDatabase database;
     private static List<Movie> nowShowing = null;
     private static List<Movie> comingSoon = null;
+    private static List<Movie> allMovies = null;
 
     private FireBaseManager() {
         // Private constructor to prevent instantiation outside of this class
@@ -72,6 +73,9 @@ public class FireBaseManager {
     }
 
     public void fetchAllMoviesData(OnMoviesDataLoadedListener listener) {
+        if (allMovies != null && allMovies.size() > 0) {
+            listener.onMoviesDataLoaded(allMovies);
+        }
         fetchMoviesData("MOVIES", listener);
     }
 
