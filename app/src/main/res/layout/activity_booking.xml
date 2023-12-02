@@ -26,7 +26,8 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/movie0"
-                app:riv_corner_radius="20dip"></com.makeramen.roundedimageview.RoundedImageView>
+                app:riv_corner_radius="20dip">
+            </com.makeramen.roundedimageview.RoundedImageView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
