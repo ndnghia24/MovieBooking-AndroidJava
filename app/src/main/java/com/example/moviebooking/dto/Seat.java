@@ -3,12 +3,12 @@ package com.example.moviebooking.dto;
 public class Seat {
     private String seatId;
     private boolean isBooked = false;
-    private boolean isChosen = false;
+    private boolean isSelected = false;
 
     public Seat(String seatId, boolean isBooked, boolean isChosen) {
         this.seatId = seatId;
         this.isBooked = isBooked;
-        this.isChosen = isChosen;
+        this.isSelected = isChosen;
     }
 
     public Seat() {
@@ -30,11 +30,11 @@ public class Seat {
         isBooked = booked;
     }
 
-    public boolean isChosen() {
-        return isChosen;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public void setChosen(boolean chosen) {
-        isChosen = chosen;
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 }

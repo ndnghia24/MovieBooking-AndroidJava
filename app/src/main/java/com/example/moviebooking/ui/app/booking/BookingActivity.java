@@ -1,9 +1,11 @@
 package com.example.moviebooking.ui.app.booking;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.example.moviebooking.R;
 import com.example.moviebooking.data.HardcodingData;
 import com.example.moviebooking.dto.DateTime;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.Seat;
 import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.allmovies.AllMovieActivity;
 import com.example.moviebooking.ui.app.allmovies.MovieGridAdapter;
@@ -30,8 +33,9 @@ public class BookingActivity extends AppCompatActivity {
     private Movie receivedMovie;
     private DateTime selectedDateTime;
     private String cinemaName;
-    private RecyclerView gridSeatsView;
-    private SeatsGridAdapter seatsGridAdapter;
+    private GridLayout gridSeatsView;
+    private static ImageView[][] seatsImageViews;
+    private static Seat[][] seatStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +52,76 @@ public class BookingActivity extends AppCompatActivity {
             return; // not found
         }
 
+        seatStatus = new Seat[10][10];
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                seatStatus[i][j] = new Seat((char) (i + 'A')+ "" + j, false, false);
+            }
+        }
+
         setOnClickForFABButtonAndBackButton();
         setDataForFilmView();
         setDataToSeatsGrid();
     }
 
     private void setDataToSeatsGrid() {
-        RecyclerView gridSeatsView =  findViewById(R.id.grid_seats);
+        gridSeatsView = findViewById(R.id.grid_seats);
+        gridSeatsView.removeAllViews();
 
-        // set adapter for dates here
-        SeatsGridAdapter seatsAdapter = new SeatsGridAdapter(this);
+        int totalColumns = seatStatus[0].length;
+        int totalRows = seatStatus.length;
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(BookingActivity.this, 10);
-        gridSeatsView.setLayoutManager(gridLayoutManager);
+        gridSeatsView.setColumnCount(totalColumns);
+        gridSeatsView.setRowCount(totalRows);
 
-        Log.d("", ": " + seatsAdapter.getItemCount());
+        gridSeatsView.post(new Runnable() {
+            @Override
+            public void run() {
+                int imageViewSize = gridSeatsView.getWidth() / totalColumns;
+                Log.d("imageViewSize", gridSeatsView.getWidth() + " " + imageViewSize + " " + totalColumns);
 
-        gridSeatsView.setAdapter(seatsAdapter);
+                for (int i = 0; i < totalRows; i++) {
+                    for (int j = 0; j < totalColumns; j++) {
+                        ImageView seatImageView = new ImageView(BookingActivity.this);
+                        seatImageView.setPadding(10, 10, 10, 10);
+                        seatImageView.setBackgroundResource(R.drawable.button_seats_unselected);
+                        seatImageView.setTag(seatStatus[i][j].getSeatId());
 
+                        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                        params.width = imageViewSize;
+                        params.height = imageViewSize;
+                        GridLayout.Spec rowSpec = GridLayout.spec(i);
+                        GridLayout.Spec colSpec = GridLayout.spec(j);
+                        params.rowSpec = rowSpec;
+                        params.columnSpec = colSpec;
+
+                        seatImageView.setLayoutParams(params);
+
+                        seatImageView.setOnClickListener(v -> {
+                            ImageView seat = (ImageView) v;
+                            String seatId = (String) seat.getTag();
+                            int row = seatId.charAt(0) - 'A';
+                            int col = seatId.charAt(1) - '0';
+                            if (seatStatus[row][col].isBooked()) {
+                                return;
+                            }
+                            if (seatStatus[row][col].isSelected()) {
+                                seat.setBackgroundResource(R.drawable.button_seats_selected);
+                                seatStatus[row][col].setSelected(false);
+                            } else {
+                                seat.setBackgroundResource(R.drawable.button_seats_unselected);
+                                seatStatus[row][col].setSelected(true);
+                            }
+                        });
+
+                        gridSeatsView.addView(seatImageView);
+                    }
+                }
+            }
+        });
     }
+
 
     private void setOnClickForFABButtonAndBackButton() {
         ImageView backButton = findViewById(R.id.iv_back_btn);
@@ -97,6 +152,5 @@ public class BookingActivity extends AppCompatActivity {
         ticketDate.setText(selectedDateTime.getShortDate());
         ticketTime.setText(selectedDateTime.getTimeAMPM());
         ticketCinema.setText(cinemaName);
-
     }
 }
