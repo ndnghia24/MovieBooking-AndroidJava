@@ -46,13 +46,13 @@ public class MoviePageActivity extends AppCompatActivity {
         userInfo = (UserInfo) intentHome.getSerializableExtra("userinfoIntent");
         Log.d("MoviePageActivity", "onCreate: " + receivedMovie.getTitle());
 
-        setOnCickForFABButtonAndBackButton();
+        setOnClickForFABButtonAndBackButton();
         bindDataToMovieInfo();
         bindDataToDateList();
         bindDataToHourList1List2();
     }
 
-    private void setOnCickForFABButtonAndBackButton() {
+    private void setOnClickForFABButtonAndBackButton() {
         ImageView backButton = (ImageView) findViewById(R.id.iv_back_btn);
         TextView cinema1 = (TextView) findViewById(R.id.tv_cinema_1);
         TextView cinema2 = (TextView) findViewById(R.id.tv_cinema_2);
