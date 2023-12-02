@@ -32,11 +32,11 @@ public class BookingActivity extends AppCompatActivity {
             return; // not found
         }
 
-        setOnCickForFABButtonAndBackButton();
+        setOnClickForFABButtonAndBackButton();
         setDataForThoseView();
     }
 
-    private void setOnCickForFABButtonAndBackButton() {
+    private void setOnClickForFABButtonAndBackButton() {
         ImageView backButton = findViewById(R.id.iv_back_btn);
         backButton.setOnClickListener(v -> finish());
 

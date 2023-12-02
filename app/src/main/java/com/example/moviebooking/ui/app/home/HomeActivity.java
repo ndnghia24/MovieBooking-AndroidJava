@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView viewAll = findViewById(com.example.moviebooking.R.id.viewAll);
         viewAll.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, AllMovieActivity.class);
+            intent.putExtra("userinfoIntent", userInfo);
             startActivity(intent);
         });
     }
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
                 moviesBarView.setLayoutManager(linearLayoutManager);
 
-                moviesBarView.setAdapter(new MovieScrollerAdapter(context, nowShowingMoviesList));
+                moviesBarView.setAdapter(new MovieScrollerAdapter(context, userInfo, nowShowingMoviesList));
             }
 
             @Override

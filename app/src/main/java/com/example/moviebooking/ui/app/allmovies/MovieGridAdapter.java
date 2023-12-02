@@ -16,16 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.moviebooking.R;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.moviepage.MoviePageActivity;
 
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieViewHolder> implements Filterable {
     private Context mContext;
+    private UserInfo userInfo;
     private List<Movie> mListMovie;
-    public MovieGridAdapter(Context mContext, List<Movie> mListMovie) {
+    public MovieGridAdapter(Context mContext, UserInfo userInfo, List<Movie> mListMovie) {
         this.mContext = mContext;
         this.mListMovie = mListMovie;
+        this.userInfo = userInfo;
     }
 
     public void setData(List<Movie> list) {
@@ -58,6 +61,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
             // start new intent
             Intent intent = new Intent(this.mContext, MoviePageActivity.class);
             intent.putExtra("movie", movie);
+            intent.putExtra("userinfoIntent", userInfo);
             mContext.startActivity(intent);
         });
     }

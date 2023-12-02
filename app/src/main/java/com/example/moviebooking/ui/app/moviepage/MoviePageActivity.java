@@ -39,20 +39,21 @@ public class MoviePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_page);
 
         Intent intentHome = getIntent();
-        receivedMovie = (Movie) intentHome.getSerializableExtra("movieIntent");
+        userInfo = (UserInfo) intentHome.getSerializableExtra("userinfoIntent");
+        receivedMovie = (Movie) intentHome.getSerializableExtra("movie");
         if (receivedMovie == null) {
             return; // not found
         }
-        userInfo = (UserInfo) intentHome.getSerializableExtra("userinfoIntent");
+
         Log.d("MoviePageActivity", "onCreate: " + receivedMovie.getTitle());
 
-        setOnClickForFABButtonAndBackButton();
+        setOnCickForFABButtonAndBackButton();
         bindDataToMovieInfo();
         bindDataToDateList();
         bindDataToHourList1List2();
     }
 
-    private void setOnClickForFABButtonAndBackButton() {
+    private void setOnCickForFABButtonAndBackButton() {
         ImageView backButton = (ImageView) findViewById(R.id.iv_back_btn);
         TextView cinema1 = (TextView) findViewById(R.id.tv_cinema_1);
         TextView cinema2 = (TextView) findViewById(R.id.tv_cinema_2);
@@ -89,7 +90,6 @@ public class MoviePageActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(MoviePageActivity.this, BookingActivity.class);
-                intent.putExtra("userinfoIntent", userInfo);
                 intent.putExtra("movie", receivedMovie);
                 DateTime selectedHour;
                 if (selectedHour1 != null) {

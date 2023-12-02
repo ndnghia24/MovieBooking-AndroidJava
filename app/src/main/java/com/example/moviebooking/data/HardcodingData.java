@@ -139,10 +139,6 @@ public class HardcodingData {
             nextSevenDaysInfo.add(new DateTime(dayOfWeek.toString().substring(0, 3), dayOfMonth, monthValue, yearValue, 0, 0));
         }
 
-        for (DateTime info : nextSevenDaysInfo) {
-            Log.d("HardcodingData", "getNextDates: " + info.toString());
-        }
-
         return nextSevenDaysInfo;
     }
 

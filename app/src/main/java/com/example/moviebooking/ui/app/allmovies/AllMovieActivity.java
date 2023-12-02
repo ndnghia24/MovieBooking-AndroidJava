@@ -1,6 +1,7 @@
 package com.example.moviebooking.ui.app.allmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import com.example.moviebooking.data.FireBaseManager;
 import com.example.moviebooking.data.HardcodingData;
 import com.example.moviebooking.data.SharedReferenceController;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllMovieActivity extends AppCompatActivity {
+    UserInfo userInfo = null;
     List<Movie> moviesList = null;
     RecyclerView allMoviesView;
     SearchView searchView;
@@ -41,6 +44,8 @@ public class AllMovieActivity extends AppCompatActivity {
         allMoviesView = findViewById(R.id.rcv_search_all_movies);
         searchView = findViewById(R.id.search_bar);
         searchView.clearFocus();
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra("userinfoIntent");
 
         setSeachViewListener();
         setDataForMoviesSlider(this);
@@ -77,7 +82,7 @@ public class AllMovieActivity extends AppCompatActivity {
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(AllMovieActivity.this, 3);
                 allMoviesView.setLayoutManager(gridLayoutManager);
 
-                movieGridAdapter = new MovieGridAdapter(context, moviesList);
+                movieGridAdapter = new MovieGridAdapter(context, userInfo, moviesList);
                 allMoviesView.setAdapter(movieGridAdapter);
             }
 
