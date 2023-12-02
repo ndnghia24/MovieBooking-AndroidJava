@@ -37,6 +37,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.moviebooking.R.layout.activity_home);
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra("userinfoIntent");
 
         setOnClickViewAll();
         setDataForMoviesBar(this);

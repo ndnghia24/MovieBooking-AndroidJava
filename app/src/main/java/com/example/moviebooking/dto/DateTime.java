@@ -1,6 +1,7 @@
 package com.example.moviebooking.dto;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 public class DateTime implements Serializable {
     String dayOfWeek;
@@ -72,6 +73,10 @@ public class DateTime implements Serializable {
         return getHour() + ":" + getMinute() + " PM";
     }
 
+    public String getShortDate() {
+        return getDayOfWeek() + ", " + getDay();
+    }
+
     public DateTime(String dayOfWeek, int day, int month, int year, int hour, int minute) {
         this.dayOfWeek = dayOfWeek;
         this.day = day;
@@ -79,9 +84,21 @@ public class DateTime implements Serializable {
         this.year = year;
         this.hour = hour;
         this.minute = minute;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+        String[] daysOfWeek = new String[]{"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+        this.dayOfWeek = daysOfWeek[calendar.get(Calendar.DAY_OF_WEEK) - 1];
     }
 
     public String toString() {
         return dayOfWeek + "-" + day + "/" + month + "/" + year + "-" + hour + ":" + minute;
+    }
+
+    public DateTime setHoursFromDateTime(DateTime dateTime) {
+        this.hour = dateTime.hour;
+        this.minute = dateTime.minute;
+
+        return this;
     }
 }

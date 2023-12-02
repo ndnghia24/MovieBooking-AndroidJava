@@ -44,7 +44,7 @@
                     android:layout_marginBottom="20dp"
                     android:background="@color/white"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="20dip"
+                    app:cardCornerRadius="15dip"
                     tools:ignore="NotSibling">
 
                     <RelativeLayout
@@ -179,6 +179,7 @@
                 tools:listitem="@layout/item_calendar"></androidx.recyclerview.widget.RecyclerView>
 
             <TextView
+                android:id="@+id/tv_cinema_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -195,6 +196,7 @@
                 tools:listitem="@layout/item_hours_button"></androidx.recyclerview.widget.RecyclerView>
 
             <TextView
+                android:id="@+id/tv_cinema_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"

@@ -17,6 +17,7 @@ import com.example.moviebooking.R;
 import com.example.moviebooking.data.HardcodingData;
 import com.example.moviebooking.dto.DateTime;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.booking.BookingActivity;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class MoviePageActivity extends AppCompatActivity {
     private Movie receivedMovie;
+    private UserInfo userInfo = null;
     List<DateTime> dates = new ArrayList<>();
     private DateOfWeekAdapter dateOfWeekAdapter;
     List<DateTime> hours1 = new ArrayList<>();
@@ -36,12 +38,12 @@ public class MoviePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_page);
 
-        Intent intentB = getIntent();
-        receivedMovie = (Movie) intentB.getSerializableExtra("movie");
+        Intent intentHome = getIntent();
+        receivedMovie = (Movie) intentHome.getSerializableExtra("movieIntent");
         if (receivedMovie == null) {
             return; // not found
         }
-
+        userInfo = (UserInfo) intentHome.getSerializableExtra("userinfoIntent");
         Log.d("MoviePageActivity", "onCreate: " + receivedMovie.getTitle());
 
         setOnCickForFABButtonAndBackButton();
@@ -52,6 +54,8 @@ public class MoviePageActivity extends AppCompatActivity {
 
     private void setOnCickForFABButtonAndBackButton() {
         ImageView backButton = (ImageView) findViewById(R.id.iv_back_btn);
+        TextView cinema1 = (TextView) findViewById(R.id.tv_cinema_1);
+        TextView cinema2 = (TextView) findViewById(R.id.tv_cinema_2);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,9 +89,17 @@ public class MoviePageActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(MoviePageActivity.this, BookingActivity.class);
+                intent.putExtra("userinfoIntent", userInfo);
                 intent.putExtra("movie", receivedMovie);
-                intent.putExtra("date", selectedDate);
-                intent.putExtra("hour", selectedHour1 != null ? selectedHour1 : selectedHour2);
+                DateTime selectedHour;
+                if (selectedHour1 != null) {
+                    selectedHour = selectedHour1;
+                    intent.putExtra("cinema", cinema1.getText());
+                } else {
+                    selectedHour = selectedHour2;
+                    intent.putExtra("cinema", cinema2.getText());
+                }
+                intent.putExtra("datetime", selectedDate.setHoursFromDateTime(selectedHour));
                 startActivity(intent);
             }
         });

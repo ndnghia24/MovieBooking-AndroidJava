@@ -15,6 +15,7 @@ import com.example.moviebooking.R;
 import com.example.moviebooking.data.FireBaseManager;
 import com.example.moviebooking.data.SharedReferenceController;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.home.HomeActivity;
 
 import java.util.List;
@@ -77,10 +78,16 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        if (SharedReferenceController.loginUser(this, username, password)) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        FireBaseManager.loginUser(this, username, password, new FireBaseManager.RegistrationCallback() {
+            @Override
+            public void onRegistrationResult(boolean isSuccess, String message, Object userInfo) {
+                if (isSuccess) {
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.putExtra("userinfoIntent", UserInfo.class.cast(userInfo));
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 }

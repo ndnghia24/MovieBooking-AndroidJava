@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.moviebooking.R;
+import com.example.moviebooking.data.FireBaseManager;
 import com.example.moviebooking.data.SharedReferenceController;
 import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.home.HomeActivity;
@@ -58,10 +59,15 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         String confirmPassword = confirmPasswordEditText.getText().toString();
 
-        if (SharedReferenceController.registerUser(this, name, username, password, confirmPassword)) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("userinfo", new UserInfo(name, username, password));
-            startActivity(intent);
-        }
+        FireBaseManager.registerUser(this, name, username, password, confirmPassword, new FireBaseManager.RegistrationCallback() {
+            @Override
+            public void onRegistrationResult(boolean isSuccess, String message, Object data) {
+                if (isSuccess) {
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 }

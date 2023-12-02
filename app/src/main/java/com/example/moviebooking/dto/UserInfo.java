@@ -43,4 +43,16 @@ public class UserInfo implements Serializable {
         this.name = data.get(2);
         this.email = data.get(3);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.email = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
