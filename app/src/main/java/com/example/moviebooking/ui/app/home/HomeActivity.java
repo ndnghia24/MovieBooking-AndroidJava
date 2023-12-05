@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements OnLogoutClickListener {
-
     private static final int SLIDER_DELAY_MS = 3000;
-
     private UserInfo userInfo;
     private ViewPager2 viewPager2;
     private Handler sliderHandler = new Handler();
