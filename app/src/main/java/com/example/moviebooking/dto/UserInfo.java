@@ -55,4 +55,12 @@ public class UserInfo implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getUsername() {
+        return this.email;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 }

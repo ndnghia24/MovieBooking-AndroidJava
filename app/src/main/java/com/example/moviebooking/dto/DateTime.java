@@ -70,7 +70,7 @@ public class DateTime implements Serializable {
         if (hour < 12) {
             return getHour() + ":" + getMinute() + " AM";
         }
-        return getHour() + ":" + getMinute() + " PM";
+        return String.valueOf(hour - 12) + ":" + getMinute() + " PM";
     }
 
     public String getShortDate() {

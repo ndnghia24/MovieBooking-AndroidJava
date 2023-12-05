@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.example.moviebooking.R;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.moviepage.MoviePageActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -22,11 +23,13 @@ public class MovieSliderAdapter extends RecyclerView.Adapter<MovieSliderAdapter.
     private Context mContext;
     private List<Movie> mListMovie;
     private ViewPager2 viewPager2;
+    private UserInfo userInfo;
 
-    public MovieSliderAdapter(Context context, List<Movie> Movies, ViewPager2 viewPager2) {
+    public MovieSliderAdapter(Context context, UserInfo userInfo, List<Movie> Movies, ViewPager2 viewPager2) {
         this.mContext = context;
         this.mListMovie = Movies;
         this.viewPager2 = viewPager2;
+        this.userInfo = userInfo;
     }
 
     @NonNull
@@ -42,15 +45,16 @@ public class MovieSliderAdapter extends RecyclerView.Adapter<MovieSliderAdapter.
         if (movie == null) {
             return;
         }
-        holder.setImage(movie);
         if (position == mListMovie.size() - 2) {
             viewPager2.post(sliderRunnable);
         }
 
-
+        holder.imageView.setPadding(0, 0, 50, 0);
+        Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(holder.imageView);
 
         holder.imageView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), MoviePageActivity.class);
+            intent.putExtra("userinfoIntent", userInfo);
             intent.putExtra("movie", movie);
             v.getContext().startActivity(intent);
         });
@@ -66,9 +70,6 @@ public class MovieSliderAdapter extends RecyclerView.Adapter<MovieSliderAdapter.
         public SliderViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageSlide);
-        }
-        private void setImage(Movie movie) {
-            Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(imageView);
         }
     }
 

@@ -54,6 +54,7 @@ public class MovieScrollerAdapter extends RecyclerView.Adapter<MovieScrollerAdap
 
         // set image resource by picasso and resize image to 27x41
         Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(holder.imgMovie);
+        //holder.imgMovie.setScaleType(ImageView.ScaleType.FIT_CENTER);
         holder.tvTitle.setText(movie.getTitle());
         holder.tvNote.setText(movie.getDetailDuration());
 

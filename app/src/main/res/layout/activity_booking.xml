@@ -158,7 +158,7 @@
         <GridLayout
             android:id="@+id/grid_seats"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/iv_screen"
             android:layout_gravity="center"
             android:layout_marginStart="50dp"
@@ -167,18 +167,80 @@
             tools:listitem="@layout/item_seats">
         </GridLayout>
 
-        <RelativeLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true">
+            android:layout_height="80dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            app:cardCornerRadius="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"
-                android:layout_centerInParent="true">
-            </TextView>
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/rl_ticket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_centerVertical="true">
+                    <ImageView
+                        android:id="@+id/iv_ticket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_genre"
+                        android:layout_centerVertical="true">
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/tv_ticket_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/iv_ticket"
+                        android:layout_toRightOf="@+id/iv_ticket"
+                        android:text="x2"
+                        android:textColor="@color/black"
+                        android:textSize="20dp">
+                    </TextView>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="50dp"
+                    android:layout_alignParentRight="true">
+                    <TextView
+                        android:id="@+id/tv_total_price_note"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:text="Total Payable:"
+                        android:gravity="end"
+                        android:textColor="@color/gray"
+                        android:textSize="15dp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/tv_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/tv_total_price_note"
+                        android:layout_toRightOf="@+id/tv_total_price_note"
+                        android:text="$25"
+                        android:textColor="@color/black"
+                        android:textSize="30dp">
+                    </TextView>
+                </RelativeLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
