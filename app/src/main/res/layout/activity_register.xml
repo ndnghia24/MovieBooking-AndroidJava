@@ -1,162 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/tv_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:text="Register"
-        android:textSize="30dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tv_login_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_register"
-        android:paddingTop="20dp"
-        android:gravity="center"
-        android:text="Sign up for a new account"
-        android:textSize="20dp"/>
-
     <RelativeLayout
-        android:id="@+id/rl_inputs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_login_note"
-        android:layout_marginTop="50dp">
-        <TextView
-            android:id="@+id/tv_hint_customer_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="30dp"
-            android:text="YOUR NAME">
-        </TextView>
-
-        <EditText
-            android:id="@+id/et_customer_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_hint_customer_name"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:paddingBottom="20dp"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textColorHint="@color/black" />
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_hint_username"
+            android:id="@+id/tv_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_customer_name"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="30dp"
-            android:text="EMAIL ID">
-        </TextView>
-
-        <EditText
-            android:id="@+id/et_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_hint_username"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:paddingBottom="20dp"
-            android:inputType="textEmailAddress"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
+            android:layout_marginTop="150dp"
+            android:gravity="center"
+            android:text="Register"
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_hint_password"
+            android:id="@+id/tv_login_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_username"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="30dp"
-            android:text="PASSWORD">
-        </TextView>
+            android:layout_below="@+id/tv_register"
+            android:paddingTop="20dp"
+            android:gravity="center"
+            android:text="Sign up for a new account"
+            android:textSize="20dp"/>
 
-        <EditText
-            android:id="@+id/et_password"
+        <RelativeLayout
+            android:id="@+id/rl_inputs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_hint_password"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:paddingBottom="20dp"
-            android:inputType="textPassword"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
+            android:layout_below="@+id/tv_login_note"
+            android:layout_marginTop="50dp">
+            <TextView
+                android:id="@+id/tv_hint_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="30dp"
+                android:text="YOUR NAME">
+            </TextView>
 
-        <TextView
-            android:id="@+id/tv_hint_confirm_password"
-            android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/et_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_hint_customer_name"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:paddingBottom="20dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textColorHint="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_hint_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_customer_name"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="30dp"
+                android:text="EMAIL ID">
+            </TextView>
+
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_hint_username"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:paddingBottom="20dp"
+                android:inputType="textEmailAddress"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_hint_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_username"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="30dp"
+                android:text="PASSWORD">
+            </TextView>
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_hint_password"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:paddingBottom="20dp"
+                android:inputType="textPassword"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_hint_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_password"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="30dp"
+                android:text="CONFIRM PASSWORD">
+            </TextView>
+
+            <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_hint_confirm_password"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:paddingBottom="20dp"
+                android:inputType="textPassword"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/rl_inputs"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:text="Create Account"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/gradient_blue">
+        </Button>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/et_password"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="30dp"
-            android:text="CONFIRM PASSWORD">
-        </TextView>
+            android:orientation="horizontal"
+            android:layout_below="@+id/btn_register"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account?"
+                android:textSize="18dp"
+                android:textColor="@color/black"/>
 
-        <EditText
-            android:id="@+id/et_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_hint_confirm_password"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:paddingBottom="20dp"
-            android:inputType="textPassword"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
-
+            <TextView
+                android:id="@+id/tv_next_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Login"
+                android:textSize="18dp"
+                android:textColor="@color/gradient_blue"/>
+        </LinearLayout>
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/btn_register"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/rl_inputs"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:text="Create Account"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/gradient_blue">
-    </Button>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/btn_register"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an account?"
-            android:textSize="18dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/tv_next_to_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Login"
-            android:textSize="18dp"
-            android:textColor="@color/gradient_blue"/>
-    </LinearLayout>
-</RelativeLayout>
+</ScrollView>

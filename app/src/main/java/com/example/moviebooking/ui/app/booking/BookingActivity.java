@@ -41,31 +41,40 @@ public class BookingActivity extends AppCompatActivity {
         fetchBookedSeat();
         setOnClickListeners();
         setDataForFilmView();
-        setDataToSeatsGrid();
+        setDataToSeatsGridFirstTime();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         fetchBookedSeat();
+        setDataToSeatsGrid();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fetchBookedSeat();
+        setDataToSeatsGrid();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         fetchBookedSeat();
+        setDataToSeatsGrid();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         fetchBookedSeat();
+        setDataToSeatsGrid();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        fetchBookedSeat();
 
         List<Seat> selectedSeats = new ArrayList<>();
         for (int i = 0; i < seatStatus.length; i++) {
@@ -226,6 +235,31 @@ public class BookingActivity extends AppCompatActivity {
         totalPrice.setText("$" + selectedSeatCount * 10);
     }
 
+    private void setDataToSeatsGridFirstTime() {
+        gridSeatsView = findViewById(R.id.grid_seats);
+        gridSeatsView.removeAllViews();
+
+        int totalColumns = seatStatus[0].length;
+        int totalRows = seatStatus.length;
+
+        gridSeatsView.setColumnCount(totalColumns);
+        gridSeatsView.setRowCount(totalRows);
+
+        gridSeatsView.post(() -> {
+            int imageViewSize = gridSeatsView.getWidth() / totalColumns;
+
+            for (int i = 0; i < totalRows; i++) {
+                for (int j = 0; j < totalColumns; j++) {
+                    Log.d("Booking", "setDataToSeatsGrid: " + i + " " + j);
+                    ImageView seatImageView = createSeatImageView(i, j, imageViewSize);
+                    gridSeatsView.addView(seatImageView);
+                }
+            }
+        });
+
+        updatePaymentInfo();
+    }
+
     private void setDataToSeatsGrid() {
         gridSeatsView = findViewById(R.id.grid_seats);
         gridSeatsView.removeAllViews();
@@ -235,24 +269,24 @@ public class BookingActivity extends AppCompatActivity {
 
         gridSeatsView.setColumnCount(totalColumns);
         gridSeatsView.setRowCount(totalRows);
-        updatePaymentInfo();
 
-        gridSeatsView.post(() -> {
-            int imageViewSize = gridSeatsView.getWidth() / totalColumns;
+        int imageViewSize = gridSeatsView.getWidth() / totalColumns;
 
-            for (int i = 0; i < totalRows; i++) {
-                for (int j = 0; j < totalColumns; j++) {
-                    ImageView seatImageView = createSeatImageView(i, j, imageViewSize);
-                    gridSeatsView.addView(seatImageView);
-                }
+        for (int i = 0; i < totalRows; i++) {
+            for (int j = 0; j < totalColumns; j++) {
+                Log.d("Booking", "setDataToSeatsGrid: " + i + " " + j);
+                ImageView seatImageView = createSeatImageView(i, j, imageViewSize);
+                gridSeatsView.addView(seatImageView);
             }
-        });
+        }
+        updatePaymentInfo();
     }
 
     private ImageView createSeatImageView(int row, int col, int imageViewSize) {
         ImageView seatImageView = new ImageView(BookingActivity.this);
         seatImageView.setPadding(10, 10, 10, 10);
         int seatBackgroundResource = getSeatBackgroundResource(row, col);
+        Log.d("Booking", "c: " + seatBackgroundResource);
         seatImageView.setBackgroundResource(seatBackgroundResource);
         seatImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         seatImageView.setTag(seatStatus[row][col].getSeatId());
@@ -266,6 +300,7 @@ public class BookingActivity extends AppCompatActivity {
         seatImageView.setLayoutParams(params);
 
         seatImageView.setOnClickListener(v -> handleSeatClick((ImageView) v));
+        seatImageView.invalidate();
 
         return seatImageView;
     }

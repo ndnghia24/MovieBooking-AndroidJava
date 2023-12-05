@@ -1,12 +1,19 @@
 package com.example.moviebooking.ui.app.booking;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.moviebooking.data.FireBaseManager;
@@ -16,11 +23,14 @@ import com.example.moviebooking.dto.Movie;
 import com.example.moviebooking.dto.Seat;
 import com.example.moviebooking.dto.Ticket;
 import com.example.moviebooking.dto.UserInfo;
+import com.example.moviebooking.ui.app.home.HomeActivity;
+import com.example.moviebooking.utils.SaveViewAsImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookingStatusActivity extends AppCompatActivity {
+    private static final int REQUEST_WRITE_STORAGE = 1;
     public void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.moviebooking.R.layout.activity_booking_status);
@@ -36,8 +46,23 @@ public class BookingStatusActivity extends AppCompatActivity {
         setOnClickListeners();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("userinfoIntent", (UserInfo) getIntent().getSerializableExtra("userinfoIntent"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     private void setOnClickListeners() {
         findViewById(com.example.moviebooking.R.id.icon_home).setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("userinfoIntent", (UserInfo) getIntent().getSerializableExtra("userinfoIntent"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
             finish();
         });
 
@@ -46,6 +71,35 @@ public class BookingStatusActivity extends AppCompatActivity {
             intent.putExtra("userinfoIntent", (UserInfo) getIntent().getSerializableExtra("userinfoIntent"));
             startActivity(intent);
         });
+
+        findViewById(com.example.moviebooking.R.id.btn_save_to_gallery).setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                checkWriteStoragePermission();
+            }
+            SaveViewAsImage.saveViewAsImage(this, findViewById(com.example.moviebooking.R.id.card_view));
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void checkWriteStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_STORAGE);
+        } else {
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_WRITE_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+            }
+        }
     }
 
     private void createTicketsCard(BookedTicketList bookedTicketList, Movie movie) {

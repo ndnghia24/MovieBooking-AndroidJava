@@ -7,14 +7,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.moviebooking.R;
@@ -23,10 +23,13 @@ import com.example.moviebooking.dto.Movie;
 import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.allmovies.AllMovieActivity;
 import com.example.moviebooking.ui.app.booking.BookingHistoryActivity;
+import com.example.moviebooking.ui.app.home.DrawerListAdapter;
+import com.example.moviebooking.ui.login_logout.LoginActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements OnLogoutClickListener {
 
     private static final int SLIDER_DELAY_MS = 3000;
 
@@ -41,8 +44,34 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         setupUserInfo();
         setOnClickViewAll();
+        setDataForDrawer();
         setDataForMoviesBar(this);
         setDataForMoviesSlider(this);
+    }
+
+    private void setDataForDrawer() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        RecyclerView drawerList = findViewById(R.id.right_drawer);
+
+        List<String> drawerItems = new ArrayList<>();
+        drawerItems.add(userInfo.getUsername());
+        drawerItems.add("Booking History");
+        drawerItems.add("Logout");
+
+        drawerList.setAdapter(new DrawerListAdapter(this, userInfo, this));
+        drawerList.setLayoutManager(new LinearLayoutManager(this));
+
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerList.setClickable(false);
+        drawerList.setFocusable(false);
+        drawerList.setFocusableInTouchMode(false);
+    }
+
+    @Override
+    public void onLogoutClick() {
+        finish();
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void setupUserInfo() {
@@ -63,11 +92,19 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         ImageView userAva = findViewById(R.id.imgUser);
-        userAva.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, BookingHistoryActivity.class);
-            intent.putExtra("userinfoIntent", userInfo);
-            startActivity(intent);
+
+        userAva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.END)) {
+                    drawer.closeDrawer(GravityCompat.END);
+                } else {
+                    drawer.openDrawer(GravityCompat.END);
+                }
+            }
         });
+
     }
 
     private void setDataForMoviesSlider(Context context) {

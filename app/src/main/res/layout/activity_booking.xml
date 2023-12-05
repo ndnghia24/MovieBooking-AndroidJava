@@ -155,17 +155,21 @@
             android:src="@drawable/cinema_screen">
         </ImageView>
 
-        <GridLayout
-            android:id="@+id/grid_seats"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_screen"
             android:layout_gravity="center"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:layout_marginBottom="16dp"
-            tools:listitem="@layout/item_seats">
-        </GridLayout>
+            android:layout_marginBottom="16dp">
+            <GridLayout
+                android:id="@+id/grid_seats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_seats">
+            </GridLayout>
+        </ScrollView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

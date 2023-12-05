@@ -57,15 +57,14 @@
             </RelativeLayout>
         </RelativeLayout>
 
-        <!-- Search Bar -->
 
         <SearchView
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
             android:layout_below="@+id/container"
             android:iconifiedByDefault="false"
             android:background="@drawable/searchview_background"
@@ -94,7 +93,7 @@
                         android:text="All Movies"
 
                         android:layout_marginStart="20dp"
-                        android:textSize="30dp"
+                        android:textSize="25dp"
                         android:textColor="@color/black"
                         android:id="@+id/allMovies"
                         android:layout_gravity="left">
