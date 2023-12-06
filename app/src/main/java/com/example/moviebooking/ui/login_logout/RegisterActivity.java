@@ -3,14 +3,17 @@ package com.example.moviebooking.ui.login_logout;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.moviebooking.R;
+import com.example.moviebooking.data.FireBaseManager;
 import com.example.moviebooking.data.SharedReferenceController;
 import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.home.HomeActivity;
@@ -58,10 +61,45 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         String confirmPassword = confirmPasswordEditText.getText().toString();
 
-        if (SharedReferenceController.registerUser(this, name, username, password, confirmPassword)) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("userinfo", new UserInfo(name, username, password));
-            startActivity(intent);
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Please enter your username", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (confirmPassword.isEmpty()) {
+            Toast.makeText(this, "Please confirm your password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Password and confirm password are not the same", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FireBaseManager.registerUser(this, name, username, password, confirmPassword, new FireBaseManager.RegistrationCallback() {
+            @Override
+            public void onRegistrationResult(boolean isSuccess, String message, Object data) {
+                if (isSuccess) {
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 }

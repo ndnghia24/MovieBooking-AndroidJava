@@ -28,6 +28,5 @@
             android:textColor="@color/black"
             android:text="12:30 PM">
         </TextView>
-
     </RelativeLayout>
 </androidx.cardview.widget.CardView >

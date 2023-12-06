@@ -14,20 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.moviebooking.R;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.moviepage.MoviePageActivity;
 
 import java.util.List;
 
 public class MovieScrollerAdapter extends RecyclerView.Adapter<MovieScrollerAdapter.MovieViewHolder> {
     private Context mContext;
+    private UserInfo userInfo;
     private List<Movie> mListMovie;
     public MovieScrollerAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public MovieScrollerAdapter(Context mContext, List<Movie> mListMovie) {
+    public MovieScrollerAdapter(Context mContext, UserInfo userInfo, List<Movie> mListMovie) {
         this.mContext = mContext;
         this.mListMovie = mListMovie;
+        this.userInfo = userInfo;
     }
 
     public void setData(List<Movie> list) {
@@ -50,13 +53,15 @@ public class MovieScrollerAdapter extends RecyclerView.Adapter<MovieScrollerAdap
         }
 
         // set image resource by picasso and resize image to 27x41
-        Glide.with(mContext).load(movie.getThumbnailUrl()).override(270, 410).into(holder.imgMovie);
+        Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(holder.imgMovie);
+        //holder.imgMovie.setScaleType(ImageView.ScaleType.FIT_CENTER);
         holder.tvTitle.setText(movie.getTitle());
         holder.tvNote.setText(movie.getDetailDuration());
 
         holder.imgMovie.setOnClickListener(v -> {
             // start new intent
             Intent intent = new Intent(this.mContext, MoviePageActivity.class);
+            intent.putExtra("userinfoIntent", userInfo);
             intent.putExtra("movie", movie);
             mContext.startActivity(intent);
         });

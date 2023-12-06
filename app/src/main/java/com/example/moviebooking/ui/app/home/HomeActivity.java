@@ -1,141 +1,161 @@
 package com.example.moviebooking.ui.app.home;
 
-import com.example.moviebooking.R;
-import com.example.moviebooking.data.HardcodingData;
-import com.example.moviebooking.data.SharedReferenceController;
-import com.example.moviebooking.dto.Movie;
-import com.example.moviebooking.dto.UserInfo;
-import com.example.moviebooking.ui.app.allmovies.AllMovieActivity;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
-import androidx.viewpager2.widget.ViewPager2;
-
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.example.moviebooking.R;
+import com.example.moviebooking.data.FireBaseManager;
+import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
+import com.example.moviebooking.ui.app.allmovies.AllMovieActivity;
+import com.example.moviebooking.ui.app.booking.BookingHistoryActivity;
+import com.example.moviebooking.ui.app.home.DrawerListAdapter;
+import com.example.moviebooking.ui.login_logout.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
-    UserInfo userInfo = null;
-    List<Movie> moviesBarList = null;
-    List<Movie> recommendedMoviesSlideList = null;
+public class HomeActivity extends AppCompatActivity implements OnLogoutClickListener {
+    private static final int SLIDER_DELAY_MS = 3000;
+    private UserInfo userInfo;
     private ViewPager2 viewPager2;
     private Handler sliderHandler = new Handler();
+    private FireBaseManager firebaseManager = FireBaseManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.moviebooking.R.layout.activity_home);
-
+        setContentView(R.layout.activity_home);
+        setupUserInfo();
         setOnClickViewAll();
-        setDataForMoviesBar();
-        setDataForMoviesSlider();
+        setDataForDrawer();
+        setDataForMoviesBar(this);
+        setDataForMoviesSlider(this);
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SharedReferenceController.saveMoviesFromList(HomeActivity.this, HardcodingData.getAllMovies());
-            }
-        }).start();
+    private void setDataForDrawer() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        RecyclerView drawerList = findViewById(R.id.right_drawer);
+
+        List<String> drawerItems = new ArrayList<>();
+        drawerItems.add(userInfo.getUsername());
+        drawerItems.add("Booking History");
+        drawerItems.add("Logout");
+
+        drawerList.setAdapter(new DrawerListAdapter(this, userInfo, this));
+        drawerList.setLayoutManager(new LinearLayoutManager(this));
+
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerList.setClickable(false);
+        drawerList.setFocusable(false);
+        drawerList.setFocusableInTouchMode(false);
+    }
+
+    @Override
+    public void onLogoutClick() {
+        finish();
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void setupUserInfo() {
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra("userinfoIntent");
+        if (userInfo == null) {
+            return;
+        }
+        Log.d("HomeActivity", "onCreate: " + userInfo.getUsername());
     }
 
     private void setOnClickViewAll() {
-        TextView viewAll = findViewById(com.example.moviebooking.R.id.viewAll);
+        TextView viewAll = findViewById(R.id.viewAll);
         viewAll.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, AllMovieActivity.class);
+            intent.putExtra("userinfoIntent", userInfo);
             startActivity(intent);
         });
-    }
 
-    private void setDataForMoviesSlider() {
-        recommendedMoviesSlideList = HardcodingData.getFewMovies();
+        ImageView userAva = findViewById(R.id.imgUser);
 
-        /*com.denzcoskun.imageslider.ImageSlider
-                imageSlider = (com.denzcoskun.imageslider.ImageSlider) findViewById(com.example.moviebooking.R.id.image_slider);
-
-        List<SlideModel> imageList = new ArrayList<>(); // set image resource from movie here
-
-        for (Movie movie : recommendedMoviesSlideList) {
-            imageList.add(new SlideModel(movie.getIdResource(), ScaleTypes.CENTER_INSIDE));
-        }
-
-        imageSlider.setImageList(imageList, ScaleTypes.CENTER_INSIDE);
-
-        imageSlider.setItemClickListener(position -> {
-            Intent intent = new Intent(HomeActivity.this, MoviePageActivity.class);
-            intent.putExtra("movie", recommendedMoviesSlideList.get(position));
-            startActivity(intent);
-        });*/
-
-        viewPager2 = findViewById(R.id.vp_images_slider);
-
-        viewPager2.setAdapter(new MovieSliderAdapter(this, recommendedMoviesSlideList, viewPager2));
-
-        viewPager2.setClipToPadding(false);
-        viewPager2.setClipChildren(false);
-        viewPager2.setOffscreenPageLimit(3);
-        viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
-        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
-        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+        userAva.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void transformPage(@NonNull View page, float position) {
-                float v = 1 - Math.abs(position);
-                page.setScaleY(0.85f + v * 0.15f);
+            public void onClick(View v) {
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.END)) {
+                    drawer.closeDrawer(GravityCompat.END);
+                } else {
+                    drawer.openDrawer(GravityCompat.END);
+                }
             }
         });
 
-        viewPager2.setPageTransformer(compositePageTransformer);
+    }
 
+    private void setDataForMoviesSlider(Context context) {
+        firebaseManager.fetchNowShowingMoviesData(new FireBaseManager.OnMoviesDataLoadedListener() {
+            @Override
+            public void onMoviesDataLoaded(List<Movie> nowShowingMoviesList) {
+                initializeMoviesSlider(context, nowShowingMoviesList);
+            }
+
+            @Override
+            public void onMoviesDataError(String errorMessage) {
+                Log.d("HomeActivity", "onMoviesDataError: " + errorMessage);
+            }
+        });
+    }
+
+    private void initializeMoviesSlider(Context context, List<Movie> nowShowingMoviesList) {
+        viewPager2 = findViewById(R.id.vp_images_slider);
+        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+        viewPager2.setOffscreenPageLimit(4);
+        viewPager2.setPageTransformer(new SliderTransformer(viewPager2));
+        viewPager2.setAdapter(new MovieSliderAdapter(context, userInfo, nowShowingMoviesList, viewPager2));
+        //configureViewPager();
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 sliderHandler.removeCallbacks(sliderRunnable);
-                sliderHandler.postDelayed(sliderRunnable, 3000);
+                sliderHandler.postDelayed(sliderRunnable, SLIDER_DELAY_MS);
             }
         });
     }
 
-    private Runnable sliderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            viewPager2.setCurrentItem(viewPager2.getCurrentItem() + 1);
-        }
-    };
+    private Runnable sliderRunnable = () -> viewPager2.setCurrentItem(viewPager2.getCurrentItem() + 1);
 
-    private void setDataForMoviesBar() {
-        RecyclerView moviesBarView = findViewById(R.id.rcv_all_movies);
+    private void setDataForMoviesBar(Context context) {
+        firebaseManager.fetchNowShowingMoviesData(new FireBaseManager.OnMoviesDataLoadedListener() {
+            @Override
+            public void onMoviesDataLoaded(List<Movie> nowShowingMoviesList) {
+                initializeMoviesBar(context, nowShowingMoviesList);
+            }
 
-        // set adapter for moviesBar here
-        MovieScrollerAdapter moviesBarAdapter = new MovieScrollerAdapter(this);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        moviesBarView.setLayoutManager(linearLayoutManager);
-
-        moviesBarAdapter.setData(getListMovies());
-
-        Log.d("HomeActivity", "setDataForMoviesBar: " + moviesBarAdapter.getItemCount());
-
-        moviesBarView.setAdapter(moviesBarAdapter);
+            @Override
+            public void onMoviesDataError(String errorMessage) {
+                Log.d("HomeActivity", "onMoviesDataError: " + errorMessage);
+            }
+        });
     }
 
-    private List<Movie> getListMovies() {
-        moviesBarList = new ArrayList<>();
+    private void initializeMoviesBar(Context context, List<Movie> nowShowingMoviesList) {
+        RecyclerView moviesBarView = findViewById(R.id.rcv_all_movies);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+        moviesBarView.setLayoutManager(linearLayoutManager);
 
-        moviesBarList = HardcodingData.getFewMovies();
-
-        return moviesBarList;
+        moviesBarView.setAdapter(new MovieScrollerAdapter(context, userInfo, nowShowingMoviesList));
     }
 }

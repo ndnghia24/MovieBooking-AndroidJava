@@ -17,17 +17,23 @@ import com.example.moviebooking.R;
 import com.example.moviebooking.data.HardcodingData;
 import com.example.moviebooking.dto.DateTime;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.booking.BookingActivity;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoviePageActivity extends AppCompatActivity {
+    private static final String USER_INFO_INTENT_KEY = "userinfoIntent";
+    private static final String MOVIE_INTENT_KEY = "movie";
+
     private Movie receivedMovie;
-    List<DateTime> dates = new ArrayList<>();
+    private UserInfo userInfo;
+    private List<DateTime> dates;
     private DateOfWeekAdapter dateOfWeekAdapter;
-    List<DateTime> hours1 = new ArrayList<>();
-    List<DateTime> hours2 = new ArrayList<>();
+    private List<DateTime> hours1;
+    private List<DateTime> hours2;
     private HoursAdapter hours1Adapter;
     private HoursAdapter hours2Adapter;
 
@@ -36,109 +42,112 @@ public class MoviePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_page);
 
-        Intent intentB = getIntent();
-        receivedMovie = (Movie) intentB.getSerializableExtra("movie");
-        if (receivedMovie == null) {
+        extractIntentData();
+        if (receivedMovie == null || userInfo == null) {
             return; // not found
         }
 
-        Log.d("MoviePageActivity", "onCreate: " + receivedMovie.getTitle());
-
-        setOnCickForFABButtonAndBackButton();
+        initializeUI();
+        setOnClickForFABButtonAndBackButton();
         bindDataToMovieInfo();
         bindDataToDateList();
         bindDataToHourList1List2();
     }
 
-    private void setOnCickForFABButtonAndBackButton() {
-        ImageView backButton = (ImageView) findViewById(R.id.iv_back_btn);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    private void extractIntentData() {
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra(USER_INFO_INTENT_KEY);
+        receivedMovie = (Movie) intent.getSerializableExtra(MOVIE_INTENT_KEY);
+    }
 
-        com.google.android.material.floatingactionbutton.FloatingActionButton
-                fab = (com.google.android.material.floatingactionbutton.FloatingActionButton) findViewById(R.id.fab);
+    private void initializeUI() {
+        ImageView backButton = findViewById(R.id.iv_back_btn);
+        backButton.setOnClickListener(v -> finish());
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DateTime selectedDate = dateOfWeekAdapter.getSelectedDate();
-                DateTime selectedHour1 = hours1Adapter.getSelectedHour();
-                DateTime selectedHour2 = hours2Adapter.getSelectedHour();
+        com.google.android.material.floatingactionbutton.FloatingActionButton fab =
+                findViewById(R.id.fab);
+        fab.setOnClickListener(this::onFabClick);
+    }
 
-                if (selectedDate == null) {
-                    Toast.makeText(MoviePageActivity.this, "Please select date", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private void onFabClick(View v) {
+        DateTime selectedDate = dateOfWeekAdapter.getSelectedDate();
+        DateTime selectedHour1 = hours1Adapter.getSelectedHour();
+        DateTime selectedHour2 = hours2Adapter.getSelectedHour();
 
-                if (selectedHour1 == null && selectedHour2 == null) {
-                    Toast.makeText(MoviePageActivity.this, "Please select hour", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if (selectedDate == null) {
+            showToast("Please select date");
+            return;
+        }
 
-                if (selectedHour1 != null && selectedHour2 != null) {
-                    Toast.makeText(MoviePageActivity.this, "Only 1 cinema per ticket", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if (selectedHour1 == null && selectedHour2 == null) {
+            showToast("Please select hour");
+            return;
+        }
 
-                Intent intent = new Intent(MoviePageActivity.this, BookingActivity.class);
-                intent.putExtra("movie", receivedMovie);
-                intent.putExtra("date", selectedDate);
-                intent.putExtra("hour", selectedHour1 != null ? selectedHour1 : selectedHour2);
-                startActivity(intent);
-            }
-        });
+        if (selectedHour1 != null && selectedHour2 != null) {
+            showToast("Only 1 cinema per ticket");
+            return;
+        }
+
+        startBookingActivity(selectedDate, selectedHour1, selectedHour2);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void startBookingActivity(DateTime selectedDate, DateTime selectedHour1, DateTime selectedHour2) {
+        Intent intent = new Intent(MoviePageActivity.this, BookingActivity.class);
+        intent.putExtra(USER_INFO_INTENT_KEY, userInfo);
+        intent.putExtra(MOVIE_INTENT_KEY, receivedMovie);
+
+        DateTime selectedHour = (selectedHour1 != null) ? selectedHour1 : selectedHour2;
+        String selectedCinema = (selectedHour1 != null) ? getCinema1Text() : getCinema2Text();
+
+        intent.putExtra("cinema", selectedCinema);
+        intent.putExtra("datetime", selectedDate.setHoursFromDateTime(selectedHour));
+
+        startActivity(intent);
+    }
+
+    private String getCinema1Text() {
+        return ((TextView) findViewById(R.id.tv_cinema_1)).getText().toString();
+    }
+
+    private String getCinema2Text() {
+        return ((TextView) findViewById(R.id.tv_cinema_2)).getText().toString();
+    }
+
+    private void setOnClickForFABButtonAndBackButton() {
+        findViewById(R.id.iv_back_btn).setOnClickListener(v -> finish());
+        findViewById(R.id.fab).setOnClickListener(this::onFabClick);
     }
 
     private void bindDataToMovieInfo() {
-        com.makeramen.roundedimageview.RoundedImageView
-            movieImage = (com.makeramen.roundedimageview.RoundedImageView) findViewById(R.id.riv_movie_image);
+        RoundedImageView movieImage = findViewById(R.id.riv_movie_image);
+        TextView movieTitle = findViewById(R.id.tv_movie_title);
+        TextView movieDescription = findViewById(R.id.tv_movie_description);
+        TextView movieDuration = findViewById(R.id.tv_movie_duration);
+        TextView movieRating = findViewById(R.id.tv_movie_rate);
+        TextView movieGenre = findViewById(R.id.tv_movie_genre);
 
-        TextView movieTitle = (TextView) findViewById(R.id.tv_movie_title);
-        TextView movieDescription = (TextView) findViewById(R.id.tv_movie_description);
-        TextView movieDuration = (TextView) findViewById(R.id.tv_movie_duration);
-        TextView movieRating = (TextView) findViewById(R.id.tv_movie_rate);
-        TextView movieGenre = (TextView) findViewById(R.id.tv_movie_genre);
-
-        Glide.with(this).load(receivedMovie.getThumbnailUrl()).into(movieImage);
+        Glide.with(this).load(receivedMovie.getThumbnail()).into(movieImage);
         movieTitle.setText(receivedMovie.getTitle());
         movieDescription.setText(receivedMovie.getDescription());
         movieDuration.setText(receivedMovie.getDuration() + " mins");
         movieRating.setText(receivedMovie.getRate());
-        movieGenre.setText(receivedMovie.getGenre());
+        movieGenre.setText(receivedMovie.getMainGenre());
     }
 
     private void bindDataToDateList() {
-        RecyclerView dateRCV = (RecyclerView) findViewById(R.id.rcv_dates);
+        RecyclerView dateRCV = findViewById(R.id.rcv_dates);
         dates = HardcodingData.getNextDates();
-
-        /*
-        for (DateTime date : dates) {
-            View view = LayoutInflater.from(this).inflate(R.layout.item_calendar, null);
-            @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-            TextView tv_dayOfWeek = view.findViewById(R.id.tv_dayOfWeek);
-            @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-            TextView tv_day = view.findViewById(R.id.tv_day);
-
-            tv_dayOfWeek.setText(date.getDayOfWeek());
-            tv_day.setText(date.getDay());
-
-            HorizontalScrollView.addView(view);
-        }*/
-
-        // set adapter for dates here
         dateOfWeekAdapter = new DateOfWeekAdapter(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         dateRCV.setLayoutManager(linearLayoutManager);
 
-        dateOfWeekAdapter.setData(HardcodingData.getNextDates());
-
-        Log.d("", ": " + dateOfWeekAdapter.getItemCount());
-
+        dateOfWeekAdapter.setData(dates);
         dateRCV.setAdapter(dateOfWeekAdapter);
     }
 
@@ -165,5 +174,4 @@ public class MoviePageActivity extends AppCompatActivity {
         Log.d("", ": " + hours2Adapter.getItemCount());
         hourRCV2.setAdapter(hours2Adapter);
     }
-
 }

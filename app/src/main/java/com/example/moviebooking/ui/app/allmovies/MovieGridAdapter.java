@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,16 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.moviebooking.R;
 import com.example.moviebooking.dto.Movie;
+import com.example.moviebooking.dto.UserInfo;
 import com.example.moviebooking.ui.app.moviepage.MoviePageActivity;
 
 import java.util.List;
 
-public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieViewHolder> {
+public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieViewHolder> implements Filterable {
     private Context mContext;
+    private UserInfo userInfo;
     private List<Movie> mListMovie;
-    public MovieGridAdapter(Context mContext, List<Movie> mListMovie) {
+    public MovieGridAdapter(Context mContext, UserInfo userInfo, List<Movie> mListMovie) {
         this.mContext = mContext;
         this.mListMovie = mListMovie;
+        this.userInfo = userInfo;
     }
 
     public void setData(List<Movie> list) {
@@ -46,7 +51,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         }
 
         // set image resource by picasso and resize image to 27x41
-        Glide.with(mContext).load(movie.getThumbnailUrl()).override(270, 410).into(holder.imgMovie);
+        Glide.with(mContext).load(movie.getThumbnail()).override(270, 410).into(holder.imgMovie);
         holder.tvTitle.setText(movie.getTitle());
 
         // String: min to hour min
@@ -56,6 +61,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
             // start new intent
             Intent intent = new Intent(this.mContext, MoviePageActivity.class);
             intent.putExtra("movie", movie);
+            intent.putExtra("userinfoIntent", userInfo);
             mContext.startActivity(intent);
         });
     }
@@ -66,6 +72,16 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
             return mListMovie.size();
         }
         return 0;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return null;
+    }
+
+    public void setFilterList(List<Movie> filteredList) {
+        mListMovie = filteredList;
+        notifyDataSetChanged();
     }
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {

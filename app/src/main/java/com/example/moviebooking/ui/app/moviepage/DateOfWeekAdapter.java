@@ -101,7 +101,7 @@ public class DateOfWeekAdapter extends RecyclerView.Adapter<DateOfWeekAdapter.Da
 
         public void bindData(DateTime dateTime) {
             day.setText(dateTime.getDay());
-            dayOfWeek.setText(dateTime.getDayOfWeek());
+            dayOfWeek.setText(dateTime.getDayOfWeek().toUpperCase().substring(0, 3));
 
             if (dateTime.isDisable()) {
                 relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.black));

@@ -3,6 +3,7 @@ package com.example.moviebooking.dto;
 import androidx.annotation.NonNull;
 
 import com.example.moviebooking.R;
+import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,19 +12,26 @@ import java.util.List;
 
 public class Movie implements Serializable {
     private String movieID;
+    @PropertyName("title")
     private String title;
+    @PropertyName("description")
     private String description;
-    private String thumbnailUrl;
+    @PropertyName("thumbnail")
+    private String thumbnail;
     private int thumbnailUri = R.drawable.ic_launcher_background;
+    @PropertyName("duration")
     private String duration;
-    private List<String> genre;
+    @PropertyName("genres")
+    private List<String> genres;
+    @PropertyName("rate")
     private String rate;
+    @PropertyName("year")
+    private String year;
     private String trailerYoutube = "https://www.youtube.com/watch?v=0";
 
     public Movie(String movieID, String movieInfo) {
         this.movieID = movieID;
 
-        // Phân tích chuỗi movieInfo để lấy thông tin cần thiết
         String[] infoParts = movieInfo.split(", ");
 
         for (String part : infoParts) {
@@ -31,13 +39,12 @@ public class Movie implements Serializable {
                 this.title = part.substring("title='".length(), part.length() - 1);
             } else if (part.startsWith("description=")) {
                 this.description = part.substring("description='".length(), part.length() - 1);
-            } else if (part.startsWith("thumbnailUrl=")) {
-                this.thumbnailUrl = part.substring("thumbnailUrl='".length(), part.length() - 1);
+            } else if (part.startsWith("thumbnail=")) {
+                this.thumbnail = part.substring("thumbnail='".length(), part.length() - 1);
             } else if (part.startsWith("genre={")) {
-                // Xử lý phần genre, bạn có thể sử dụng các phương thức phù hợp để chuyển đổi chuỗi thành List<String>
                 String genreString = part.substring("genre={".length(), part.length() - 1);
                 String[] genres = genreString.split(", ");
-                this.genre = new ArrayList<>(Arrays.asList(genres));
+                this.genres = new ArrayList<>(Arrays.asList(genres));
             } else if (part.startsWith("duration=")) {
                 this.duration = part.substring("duration=".length());
             } else if (part.startsWith("rate=")) {
@@ -65,20 +72,24 @@ public class Movie implements Serializable {
         this.duration = duration;
     }
 
-    public String getGenre() {
-        return genre.get(0);
+    public String getMainGenre() {
+        return genres.get(0);
     }
 
-    public void setGenre(List<String> genre) {
-        this.genre = genre;
+    public List<String> getGenres() {
+        return genres;
     }
 
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
     }
 
-    public void setThumbnailUrl(String thumbnail) {
-        this.thumbnailUrl = thumbnail;
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getTitle() {
@@ -112,15 +123,22 @@ public class Movie implements Serializable {
     public String getMovieID() {
         return movieID;
     }
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public String getMovieInfo() {
         String data =
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
                 ", genre={";
-        for (String s : genre) {
-            if (s.equals(genre.get(genre.size() - 1))) {
+        for (String s : genres) {
+            if (s.equals(genres.get(genres.size() - 1))) {
                 data = data + "'" + s + "'";
                 break;
             }
@@ -141,10 +159,10 @@ public class Movie implements Serializable {
                 ", movieId='" + movieID + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
                 ", genre={";
-        for (String s : genre) {
-            if (s.equals(genre.get(genre.size() - 1))) {
+        for (String s : genres) {
+            if (s.equals(genres.get(genres.size() - 1))) {
                 data = data + "'" + s + "'";
                 break;
             }
@@ -158,12 +176,12 @@ public class Movie implements Serializable {
         return data;
     }
 
-    public Movie(String movieID, String title, String description, String imageUrl, List<String> genre, String duration, String rate, String trailerYoutube) {
+    public Movie(String movieID, String title, String description, String imageUrl, List<String> genres, String duration, String rate, String trailerYoutube) {
         this.movieID = movieID;
         this.title = title;
         this.description = description;
-        this.thumbnailUrl = imageUrl;
-        this.genre = genre;
+        this.thumbnail = imageUrl;
+        this.genres = genres;
         this.duration = duration;
         this.rate = rate;
         this.trailerYoutube = trailerYoutube;
