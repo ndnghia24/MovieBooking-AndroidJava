@@ -41,7 +41,10 @@ public class BookingActivity extends AppCompatActivity {
         fetchBookedSeat();
         setOnClickListeners();
         setDataForFilmView();
-        setDataToSeatsGridFirstTime();
+        if (savedInstanceState == null) {
+            setDataToSeatsGridFirstTime();
+        }
+        setDataToSeatsGrid();
     }
 
     @Override

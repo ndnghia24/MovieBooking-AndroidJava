@@ -100,6 +100,14 @@ public class FireBaseManager {
     public static void registerUser(Context context, String name, String username, String password, String confirmPassword, RegistrationCallback callback) {
         DatabaseReference usersReference = firebaseDatabase.getReference(USERS_TABLE);
 
+        // Database paths must not contain '.', '#', '$', '[', or ']'
+
+        if (username.contains(".") || username.contains("#") || username.contains("$") || username.contains("[") || username.contains("]")) {
+            Toast.makeText(context, "Username must not contain '.', '#', '$', '[', or ']'", Toast.LENGTH_SHORT).show();
+            callback.onRegistrationResult(false, "Username must not contain '.', '#', '$', '[', or ']'", null);
+            return;
+        }
+
         usersReference.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -282,7 +290,7 @@ public class FireBaseManager {
                     String bookedTime = ticketSnapshot.child("bookedTime").getValue(String.class);
                     String cost = ticketSnapshot.child("cost").getValue(String.class);
 
-                    if (userId.equals(username)) {
+                    if (userId.equals(username) && isBooked) {
                         Ticket ticket = new Ticket(id, userId, movieId, cinemaId, dateTimeStr, seatId, isBooked, bookedTime, cost);
                         ticket.setMovieName(movieName);
                         ticket.setThumbnail(movieThumbnail);
